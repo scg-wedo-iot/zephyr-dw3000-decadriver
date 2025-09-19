@@ -11,7 +11,7 @@ LOG_MODULE_REGISTER(dw3000, CONFIG_DW3000_LOG_LEVEL);
 
 #define DW_INST DT_INST(0, decawave_dw3000)
 
-K_THREAD_STACK_DEFINE(dw3000_stack_area, 1024);
+K_THREAD_STACK_DEFINE(dw3000_stack_area, 4096);
 static struct k_work_q dw3000_work_q;
 static const struct k_work_queue_config dw3000_wq_config = {
     .name = "dw3000_wq"
@@ -92,7 +92,7 @@ void dw3000_init_workqueue(void) {
 	k_work_queue_start(&dw3000_work_q,
 					dw3000_stack_area,
 					K_THREAD_STACK_SIZEOF(dw3000_stack_area),
-					K_PRIO_COOP(0),
+					K_HIGHEST_APPLICATION_THREAD_PRIO,
 					&dw3000_wq_config);
 
     k_work_init(&dw3000_isr_work, dw3000_hw_isr_work_handler);
